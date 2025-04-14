@@ -15,10 +15,17 @@ app.post('/resumir', async (req, res) => {
     const response = await axios.post(
       'https://api-inference.huggingface.co/models/facebook/bart-large-cnn',
       { inputs: texto },
-      { headers: { Authorization: `Bearer ${API_KEY}` } }
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
     );
+
     res.json({ resumo: response.data[0].summary_text });
   } catch (error) {
+    console.error(error.response?.data || error.message);
     res.status(500).send('Erro ao gerar resumo');
   }
 });
